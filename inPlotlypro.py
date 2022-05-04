@@ -12,7 +12,7 @@ class IntegralRiemunn():
         self.f = f
         self.N = N
         self.type = type
-        self.X = np.linspace(a, b, N )  # дробление отрезка
+        self.X = np.linspace(a, b, N)  # дробление отрезка
         self.Y = f(self.X)  # вычисление значение в точках
 
     def calculate_integral(self, n):
@@ -77,17 +77,24 @@ class IntegralRiemunn():
 
         bar = ax.bar(x_points_bar, y_points, width=1.0 * (b - a) / num_trapezoids, alpha=0.3, align='edge', color='#47DBCD',
                      edgecolor='#2CBDFE', lw=2)
+        prediction = math.e / (24*(i+1)^2) if type == "mid" else math.e / (2*(i+1))
+
         ax.set_title('Интеграл $\int_{{0}}^{{1}} \\ e^{-x}dx$. \n' +
-                     '{0} Трапеций: Значение: {1:.9f} Ошибка {2:.9f}'.format(num_trapezoids, y_int, err), fontsize=30)
+                     '{0} Трапеций: Значение: {1:.9f} \n Ошибка {2:.9f} и ее оценка {3:.9f}'.format(num_trapezoids, y_int, err, prediction), fontsize=30)
         ax.axes.get_xaxis().set_visible(False)
         ax.axes.get_yaxis().set_visible(False)
+
+        print((i+1)*factor, err)
         return bar
+
+    def show_mistake(self, n, type):
+        ...
 
     def show(self):
         fig = plt.figure(figsize=(21, 14))
         plt.axis('off')
         anim = animation.FuncAnimation(fig, self.animate, frames=40, interval=120, blit=True)
-        anim.save('e_x_right.gif', writer="Pillow")
+        anim.save('e_x_left.gif', writer="Pillow")
 
 
 f = lambda x: np.exp(-x)  # наша замечательная функция
@@ -95,6 +102,5 @@ a, b = 0, 1  # отрезок интегрирования
 N = 200  # количество точек деления
 factor = 5  # увеличение количеств точек деления
 
-int = IntegralRiemunn(a, b, f, N, type="right")
+int = IntegralRiemunn(a, b, f, N, type="left")
 int.show()
-
